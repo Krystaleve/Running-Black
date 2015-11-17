@@ -1,0 +1,6 @@
+RushHour/Debug/*
+RushHour/ipch/*
+*.sdf
+*.suo
+*.opensdf
+*.aps
