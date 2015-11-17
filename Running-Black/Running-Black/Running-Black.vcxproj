@@ -161,12 +161,21 @@
     <ResourceCompile Include="Running-Black.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="resources\background.bmp" />
+    <Image Include="resources\background_0.bmp" />
+    <Image Include="resources\background_1.bmp" />
+    <Image Include="resources\background_2.bmp" />
     <Image Include="resources\barrier_0.bmp" />
-    <Image Include="resources\building_0.bmp" />
-    <Image Include="resources\building_1.bmp" />
-    <Image Include="resources\hero.bmp" />
+    <Image Include="resources\buildings.bmp" />
+    <Image Include="resources\hero_0.bmp" />
+    <Image Include="resources\hero_1.bmp" />
+    <Image Include="resources\hero_2.bmp" />
     <Image Include="resources\tool_0.bmp" />
+    <Image Include="resources\tool_1.bmp" />
+    <Image Include="resources\tool_2.bmp" />
+    <Image Include="resources\tool_3.bmp" />
+    <Image Include="resources\tool_4.bmp" />
+    <Image Include="resources\tool_5.bmp" />
+    <Image Include="resources\tool_6.bmp" />
     <Image Include="Running-Black.ico" />
     <Image Include="small.ico" />
   </ItemGroup>

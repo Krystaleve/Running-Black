@@ -36,6 +36,7 @@ typedef struct
 typedef struct
 {
 	HBITMAP		img;
+	POINT		img_point;
 	SIZE		img_size;
 	UINT		img_state;
 	POINTF		pos;
@@ -51,10 +52,11 @@ typedef struct
 //建筑物结构体，建筑位图、位置、大小
 typedef struct
 {
-	HBITMAP		roof_img;
+	HBITMAP		img;
+	POINT		roof_point;
 	SIZE		roof_size;
-	HBITMAP		block_img;
 	SIZE		block_size;
+	POINT		block_point;
 	POINTF		pos;
 	SIZE		size;
 }Building;
@@ -64,6 +66,7 @@ typedef struct
 {
 	HBITMAP		img;
 	SIZE		img_size;
+	POINT		img_point;
 	POINTF		pos;
 	SIZE		size;
 }Barrier;
@@ -73,6 +76,7 @@ typedef struct
 {
 	HBITMAP		img;
 	SIZE		img_size;
+	POINT		img_point;
 	POINTF		pos;
 	SIZE		size;
 	UINT		m_type;
@@ -83,6 +87,7 @@ typedef struct
 {
 	HBITMAP		img;
 	SIZE		img_size;
+	POINT		img_point;
 	POINTF		pos;
 	SIZE		size;
 }Background;
@@ -100,6 +105,7 @@ typedef struct
 #define MAX_LOADSTRING 100
 #define BUILDINGS_NUM 100
 #define BARRIERS_NUM 100
+#define BACKGROUND_NUM 3
 #define TOOLS_NUM 100
 #define WIDTH 30
 #define HEIGHT 20
