@@ -2,7 +2,7 @@
 * Copyright 2015.407A工作室
 * All rights reserved.
 *
-* 文件名称：RushHour_Defination.cpp
+* 文件名称：Running-Black_Defination.cpp
 * 摘	要：跑酷游戏工程函数定义
 *
 * 当前版本：1.0
@@ -15,7 +15,7 @@
 */
 
 #include "stdafx.h"
-#include "RushHour.h"
+#include "Running-Black.h"
 
 Hero g_hero;
 Building g_buildings[BUILDINGS_NUM];
@@ -189,7 +189,7 @@ VOID BuildingInit(Building& building, UINT k)
 	building.pos.x = k;
 	building.pos.y = 14;
 	building.size.cx = 1;
-	building.size.cy = 1;
+	building.size.cy = 2;
 }
 
 //Barrier初始化
@@ -304,11 +304,11 @@ VOID BuildingPaint(HDC hdcBuffer, HDC hdcBmp, Building& building)
 {
 	//TODO
 	SelectObject(hdcBmp, building.roof_img);
-	TransparentBlt(hdcBuffer, building.pos.x * GRID, building.pos.y * GRID, building.size.cx * GRID, building.size.cy * GRID, hdcBmp, 0, 0, building.roof_size.cx, building.roof_size.cy, RGB(255,255,255));
+	TransparentBlt(hdcBuffer, building.pos.x * GRID, building.pos.y * GRID, GRID, GRID, hdcBmp, 0, 0, building.roof_size.cx, building.roof_size.cy, RGB(255,255,255));
 	SelectObject(hdcBmp, building.block_img);
 	int t;
 	for (t = 1; t < building.size.cy;t++)
-		TransparentBlt(hdcBuffer, building.pos.x * GRID, (building.pos.y + t) * GRID, building.size.cx * GRID, building.size.cy * GRID, hdcBmp, 0, 0, building.block_size.cx, building.block_size.cy, RGB(255,255,255));
+		TransparentBlt(hdcBuffer, building.pos.x * GRID, (building.pos.y + t) * GRID, GRID, GRID, hdcBmp, 0, 0, building.block_size.cx, building.block_size.cy, RGB(255,255,255));
 }
 
 //Barrier绘制

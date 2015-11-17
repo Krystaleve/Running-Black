@@ -1,13 +1,13 @@
-//文件名称：RushHour.cpp
+//文件名称：Running-Black.cpp
 //摘	要：跑酷游戏工程程序入口
 
 
 #include "stdafx.h"
-#include "RushHour.h"
+#include "Running-Black.h"
 
 /* 全局变量定义 */
 HINSTANCE hInst;								// 当前实例
-static TCHAR szTitle[MAX_LOADSTRING] = _T("RushHour");					// 标题栏文本
+static TCHAR szTitle[MAX_LOADSTRING] = _T("Running-Black");					// 标题栏文本
 static TCHAR szWindowClass[MAX_LOADSTRING] = _T("win32app");			// 主窗口类名
 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
@@ -24,7 +24,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 
 	// 初始化全局字符串
 	LoadString(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-	LoadString(hInstance, IDC_RUSHHOUR, szWindowClass, MAX_LOADSTRING);
+	LoadString(hInstance, IDC_RUNNINGBLACK, szWindowClass, MAX_LOADSTRING);
 	MyRegisterClass(hInstance);
 
 	// 执行应用程序初始化:
@@ -33,7 +33,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 		return FALSE;
 	}
 
-	hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_RUSHHOUR));
+	hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_RUNNINGBLACK));
 
 	// 主消息循环:
 	while (GetMessage(&msg, NULL, 0, 0))
@@ -66,10 +66,10 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 	wcex.cbClsExtra		= 0;
 	wcex.cbWndExtra		= 0;
 	wcex.hInstance		= hInstance;
-	wcex.hIcon			= LoadIcon(hInstance, MAKEINTRESOURCE(IDI_RUSHHOUR));
+	wcex.hIcon			= LoadIcon(hInstance, MAKEINTRESOURCE(IDI_RUNNINGBLACK));
 	wcex.hCursor		= LoadCursor(NULL, IDC_ARROW);
 	wcex.hbrBackground	= (HBRUSH)(COLOR_WINDOW+1);
-	wcex.lpszMenuName	= MAKEINTRESOURCE(IDC_RUSHHOUR);
+	wcex.lpszMenuName	= MAKEINTRESOURCE(IDI_RUNNINGBLACK);
 	wcex.lpszClassName	= szWindowClass;
 	wcex.hIconSm		= LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
@@ -93,7 +93,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    hInst = hInstance; // 将实例句柄存储在全局变量中
 
    hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME & ~WS_MAXIMIZEBOX,
-      CW_USEDEFAULT, CW_USEDEFAULT, (WIDTH + 0.5) * GRID, (HEIGHT + 1.9) * GRID, NULL, NULL, hInstance, NULL);
+      CW_USEDEFAULT, CW_USEDEFAULT, (WIDTH + 0.5) * GRID, (HEIGHT + 1.2) * GRID, NULL, NULL, hInstance, NULL);
 
    if (!hWnd)
    {

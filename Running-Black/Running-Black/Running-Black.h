@@ -2,7 +2,7 @@
 * Copyright 2015.407A工作室
 * All rights reserved.
 *
-* 文件名称：RushHour.h
+* 文件名称：Running-Black.h
 * 摘	要：跑酷游戏工程声明文件
 *
 * 当前版本：1.0
@@ -18,8 +18,8 @@
 
 #pragma comment(lib, "msimg32.lib")
 
-#ifndef RUSHHOUR_H
-#define RUSHHOUR_H
+#ifndef RunningBlack_H
+#define RunningBlack_H
 
 #include "resource.h"
 
