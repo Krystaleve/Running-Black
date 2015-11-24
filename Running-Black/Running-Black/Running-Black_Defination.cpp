@@ -16,6 +16,7 @@
 
 #include "stdafx.h"
 #include "Running-Black.h"
+#include "try.h"
 
 Hero g_hero;
 Building g_buildings[BUILDINGS_NUM];
@@ -128,10 +129,12 @@ VOID Render(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		BackgroundPaint(hdcBuffer, hdcBmp, g_backgrounds[k]);
 	for(k = 0;k < BUILDINGS_NUM;k++)
 		BuildingPaint(hdcBuffer, hdcBmp, g_buildings[k]);
+/*	
 	for(k = 0;k < BARRIERS_NUM;k++)
 		BarrierPaint(hdcBuffer, hdcBmp, g_barriers[k]);
 	for(k = 0;k < TOOLS_NUM;k++)
-		ToolPaint(hdcBuffer, hdcBmp, g_tools[k]);
+		ToolPaint(hdcBuffer, hdcBmp, g_tools[k]);	
+*/
 	HeroPaint(hdcBuffer, hdcBmp, g_hero);
 
 	BitBlt(hdc, 0, 0, WIDTH * GRID, HEIGHT * GRID, hdcBuffer, 0, 0, SRCCOPY);
@@ -232,18 +235,6 @@ VOID ToolInit(Tool& tool, UINT k)
 VOID HeroUpdate(Hero& hero)         
 {
 	//TODO
-	if(GetKeyState(VK_SPACE) < 0){
-		hero.pos.y -= 0.2;
-	}
-	else if (hero.pos.y < 15){
-		hero.pos.y += 0.2;
-	}
-	if(GetKeyState(VK_RIGHT) < 0){
-		hero.pos.x += 0.2;
-	}
-	if(GetKeyState(VK_LEFT) < 0){
-		hero.pos.x -= 0.2;
-	}
 }
 
 //GameStatus¸üÐÂ
