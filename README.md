@@ -1,3 +1,4 @@
-#RushHour
+#Try
 ---
-init
+用于尝试基本操作
+

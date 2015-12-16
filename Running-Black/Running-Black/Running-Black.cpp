@@ -138,11 +138,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
 		break;
+	case WM_LBUTTONDOWN:
+		MouseClickEvent(hWnd, wParam, lParam);
+		break;
 	case WM_CREATE:
 		Init(hWnd, wParam, lParam);
 		break;
 	case WM_TIMER:
 		TimerUpdate(hWnd, wParam, lParam);
+		break;
 	case WM_PAINT:
 		Render(hWnd, wParam, lParam);
 		break;

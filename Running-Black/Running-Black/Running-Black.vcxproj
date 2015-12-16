@@ -149,26 +149,40 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Running-Black.cpp" />
-    <ClCompile Include="Running-Black_Defination.cpp" />
+    <ClCompile Include="Running-Black_Frame.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Running-Black_Tool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Running-Black.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="resources\author.bmp" />
     <Image Include="resources\background_0.bmp" />
     <Image Include="resources\background_1.bmp" />
     <Image Include="resources\background_2.bmp" />
+    <Image Include="resources\background_3.bmp" />
+    <Image Include="resources\background_4.bmp" />
+    <Image Include="resources\background_5.bmp" />
     <Image Include="resources\barrier_0.bmp" />
     <Image Include="resources\buildings.bmp" />
+    <Image Include="resources\button_pause_0.bmp" />
+    <Image Include="resources\button_pause_1.bmp" />
+    <Image Include="resources\button_return.bmp" />
+    <Image Include="resources\button_start_0.bmp" />
+    <Image Include="resources\button_start_1.bmp" />
+    <Image Include="resources\button_start_2.bmp" />
     <Image Include="resources\hero_0.bmp" />
     <Image Include="resources\hero_1.bmp" />
     <Image Include="resources\hero_2.bmp" />
+    <Image Include="resources\hero_3.bmp" />
+    <Image Include="resources\hero_select_0.bmp" />
+    <Image Include="resources\hero_select_1.bmp" />
     <Image Include="resources\tool_0.bmp" />
     <Image Include="resources\tool_1.bmp" />
     <Image Include="resources\tool_2.bmp" />
@@ -176,8 +190,15 @@
     <Image Include="resources\tool_4.bmp" />
     <Image Include="resources\tool_5.bmp" />
     <Image Include="resources\tool_6.bmp" />
+    <Image Include="resources\tool_7.bmp" />
+    <Image Include="resources\tool_8.bmp" />
     <Image Include="Running-Black.ico" />
     <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="resources\background_music.wav" />
+    <Media Include="resources\cat_die.wav" />
+    <Media Include="resources\dog_die.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
