@@ -5,13 +5,13 @@
 * 文件名称：Running-Black_Frame.cpp
 * 摘	要：跑酷游戏工程框架函数定义
 *
-* 当前版本：1.5
+* 当前版本：2.1
 * 作	者: Krystal/甘茂霖
-* 完成日期：2015年12月6日
+* 完成日期：2015年12月18日
 *
-* 取代版本：1.4
+* 取代版本：1.6
 * 原作者  ：Krystal/甘茂霖
-* 完成日期：2015年12月5日
+* 完成日期：2015年12月16日
 */
 
 #include "stdafx.h"
@@ -194,17 +194,23 @@ VOID Init(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		g_tools[k].solid = FALSE;
 		g_tools[k].down = TRUE;
 		g_tools[k].disappear = FALSE;
+		g_tools[k].left_time = 0;
 		tool_id[k % TOOLS_TYPE][k / TOOLS_TYPE + 1] = k;
 		if(g_tools[k].m_type == 1 || g_tools[k].m_type == 3)
 			g_tools[k].solid = TRUE;
-		if(g_tools[k].m_type > 3 || g_tools[k].m_type == 0)
+		if(g_tools[k].m_type == 0)
+			g_tools[k].down = FALSE;
+		if(g_tools[k].m_type > 3)
 			g_tools[k].disappear = TRUE;
 		if(g_tools[k].m_type == 1)
 			g_tools[k].img_size.cy -= 28;
 		if(g_tools[k].m_type == 3)
 			g_tools[k].img_size.cy -= 10;
 		if(g_tools[k].m_type == 7)
+		{
 			g_tools[k].img_size.cx = g_tools[k].img_size.cy = 128;
+			g_tools[k].down = FALSE;
+		}
 	}
 	InitGame();	
 	//启动计时器
@@ -214,10 +220,12 @@ VOID Init(HWND hWnd, WPARAM wParam, LPARAM lParam)
 //定时器事件
 VOID TimerUpdate(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
+	//等待上次定时器事件结束
 	if(!g_flag) return;
 	g_flag = FALSE;
 	g_times = (g_times + 1) % INT_MAX;
 	GameStatusUpdate(g_gameStatus);
+	//游戏正常进行，m_state=9表示暂停
 	if(g_gameStatus.m_state == 8)
 	{
 		headX -= g_gameStatus.moveX;
@@ -245,7 +253,7 @@ VOID MouseClickEvent(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	int state_1 = g_gameStatus.m_state % 4;
 	if(state_0 == 1)
 	{
-		if(state_1 == 0)
+		if(state_1 == 0) //开始菜单界面
 		{
 			if(InArea(pos.x, pos.y, button_start_0.dst_point, button_start_0.dst_size))
 				g_gameStatus.m_state = 5;
@@ -254,8 +262,9 @@ VOID MouseClickEvent(HWND hWnd, WPARAM wParam, LPARAM lParam)
 			else if(InArea(pos.x, pos.y, button_start_2.dst_point, button_start_2.dst_size))
 				g_gameStatus.m_state = 7;
 		}
-		else if(state_1 == 1)
+		else if(state_1 == 1) //选择人物界面
 		{
+			//选择人物0_罗小黑
 			if(InArea(pos.x, pos.y, hero_select_0.dst_point, hero_select_0.dst_size))
 			{
 				g_gameStatus.m_state = 8;
@@ -272,34 +281,37 @@ VOID MouseClickEvent(HWND hWnd, WPARAM wParam, LPARAM lParam)
 					BuildingInit(g_buildings[i]);
 				}
 				CreateTool();
- 				toolCreate = TRUE;
 			}
 			else if(InArea(pos.x, pos.y, hero_select_1.dst_point, hero_select_1.dst_size))
 			{
 				g_gameStatus.m_state = 8;
 				g_gameStatus.hero_type = 1;
 				HeroInit(g_hero[1]);
-				headX = 0;
+				headX = WIDTH;
 				preBuilding.x = -1;
 				preBuilding.y = g_gameStatus.basic_high;
 				toolX = -(DOUBLE)tool_gap_min-3;
 				building_now = 0;
+				toolCreate = TRUE;
 				int i;
 				for(i = 1;i < BUILDINGS_NUM;i++)
 				{
 					BuildingInit(g_buildings[i]);
 				}
+				toolCreate = FALSE;
 				CreateTool();
- 				toolCreate = TRUE;
 			}
+			//返回菜单界面
 			else if(InArea(pos.x, pos.y, button_return.dst_point, button_return.dst_size))
 				g_gameStatus.m_state = 4;
 		}
-		else
+		else 
+			//返回菜单界面
 			if(InArea(pos.x, pos.y, button_return.dst_point, button_return.dst_size))
 				g_gameStatus.m_state = 4;
 	}
-	else if(state_0 == 2)
+	else if(state_0 == 2) 
+		//暂停/开始
 		if(InArea(pos.x, pos.y, button_pause_0.dst_point, button_pause_0.dst_size))
 			g_gameStatus.m_state = 17 - g_gameStatus.m_state;
 }
@@ -365,43 +377,43 @@ VOID InitPos()
 	_PointF(hero_select_1.dst_point, w * 0.2, h * 0.3);
 	_Size(hero_select_1.dst_size, w * 0.25, h * 0.4);
 
-	_PointF(author.dst_point, w * 0.3, h * 0.35);
+	_PointF(author.dst_point, w * 0.3, h * 0.25);
 	_Size(author.dst_size, w * 0.4, h * 0.4);
 
-	_PointF(button_start_0.dst_point, w * 0.4, h * 0.25);
-	_Size(button_start_0.dst_size, w * 0.2, h * 0.15);
+	_PointF(button_start_0.dst_point, w * 0.35, h * 0.3);
+	_Size(button_start_0.dst_size, w * 0.3, h * 0.15);
 
-	_PointF(button_start_1.dst_point, w * 0.4, h * 0.475);
-	_Size(button_start_1.dst_size, w * 0.2, h * 0.15);
+	_PointF(button_start_1.dst_point, w * 0.35, h * 0.525);
+	_Size(button_start_1.dst_size, w * 0.3, h * 0.15);
 
-	_PointF(button_start_2.dst_point, w * 0.4, h * 0.75);
-	_Size(button_start_2.dst_size, w * 0.2, h * 0.15);
+	_PointF(button_start_2.dst_point, w * 0.35, h * 0.75);
+	_Size(button_start_2.dst_size, w * 0.3, h * 0.15);
 
 	_PointF(button_return.dst_point, w * 0.45, h * 0.8);
 	_Size(button_return.dst_size, w * 0.1, h * 0.1);
 
-	_PointF(button_pause_0.dst_point, w * 0.1, h * 0.1);
-	_Size(button_pause_0.dst_size, w * 0.1, h * 0.1);
+	_PointF(button_pause_0.dst_point, w * 0.05, h * 0.05);
+	_Size(button_pause_0.dst_size, w * 0.05, h * 0.05);
 
-	_PointF(button_pause_1.dst_point, w * 0.1, h * 0.1);
-	_Size(button_pause_1.dst_size, w * 0.1, h * 0.1);
+	_PointF(button_pause_1.dst_point, w * 0.05, h * 0.05);
+	_Size(button_pause_1.dst_size, w * 0.05, h * 0.05);
 
-	_PointF(info_0_pos, w * 0.3, h * 0.3);
-	_PointF(info_1_pos, w * 0.2, h * 0.4);
-	_PointF(title_pos, w * 0.2, h * 0.1);
-	_PointF(hint_pos, w * 0.3, h * 0.2);
-	_PointF(score_pos, w * 0.88, h * 0.15);
-	_PointF(coin_pos, w * 0.88, h * 0.2);
-	_PointF(life_pos, w * 0.88, h * 0.25);
-	_PointF(help_pos, w * 0.3, h * 0.35);
+	_PointF(info_0_pos, w * 0.35, h * 0.3);
+	_PointF(info_1_pos, w * 0.2, h * 0.45);
+	_PointF(title_pos, w * 0.25, h * 0.1);
+	_PointF(hint_pos, w * 0.35, h * 0.1);
+	_PointF(score_pos, w * 0.88, h * 0.05);
+	_PointF(coin_pos, w * 0.88, h * 0.10);
+	_PointF(life_pos, w * 0.88, h * 0.15);
+	_PointF(help_pos, w * 0.2, h * 0.2);
 	_PointF(death_pos, w * 0.3, h * 0.2);
-	_PointF(restart_pos, 0.3, 0.7);
+	_PointF(restart_pos, w * 0.3, h * 0.7);
 
-	_Size(help_size, w * 0.4, h * 0.4);
+	_Size(help_size, w * 0.6, h * 0.5);
 	_Size(death_size, w * 0.4, h * 0.4);
 }
 
-//游戏初始化
+//游戏数据初始化
 VOID InitGame()
 {
 	PlaySound((LPCWSTR)IDR_BACKGROUND, NULL, SND_RESOURCE | SND_ASYNC | SND_LOOP);
@@ -420,6 +432,7 @@ VOID InitGame()
 	HeroInit(g_hero[g_gameStatus.hero_type]);
 	for(k = 0;k < BACKGROUND_NUM;k++)
 		BackgroundInit(g_backgrounds[k]);
+	//开始界面里面的初始草地
 	g_buildings[0].pos.x = 0;
 	g_buildings[0].pos.y = g_gameStatus.basic_high;
 	g_buildings[0].size.cx = WIDTH;
@@ -439,6 +452,7 @@ VOID HeroInit(Hero& hero)
 	hero.img_state = 0;
 	hero.times = 2;
 	hero.img = hero_bmps[g_gameStatus.hero_type * 3].img;
+	hero.invincible_time = 100;
 }
 
 //GameStatus初始化
@@ -451,7 +465,7 @@ VOID GameStatusInit(GameStatus& gameStatus)
 	gameStatus.hero_type = 0;
 	gameStatus.basic_high = 15;
 	gameStatus.basic_x = WIDTH / 3;
-	gameStatus.life = 1;
+	gameStatus.life = 3;
 	gameStatus.m_coins = 0;
 	gameStatus.moveX = moveX;
 	gameStatus.backgroundMove = backgroundMove;
@@ -477,7 +491,7 @@ VOID BuildingInit(Building& building)
 		{
 			if(abs(preBuilding.x - headX) > 0.00001)
 				continue;
-			headX += random(2,4);	//空段长度范围
+			headX += random(2,3);	//空段长度范围
 			continue;
 		}
 		else if(tmp == 1)	//生成长草地
@@ -492,8 +506,7 @@ VOID BuildingInit(Building& building)
 	headX += building.size.cx;
 	preBuilding.x = headX;
 	preBuilding.y = building.pos.y;
-	if(toolCreate)
- 		CreateTool();
+	CreateTool();
 }
 
 //Tool初始化
@@ -504,11 +517,13 @@ VOID ToolInit(Tool& tool)
 		cx = 2;
 	else
 		cx = 1;
-	if(toolX + tool_gap_min + 1 + cx > g_buildings[building_now].pos.x + g_buildings[building_now].size.cx - 0.00001)
+	//剩下间隔无法放下下一个道具
+	if(toolX + tool_gap_min + 1 + cx > g_buildings[building_now].pos.x + g_buildings[building_now].size.cx - 0.00001) 
 	{	
 		building_now = (building_now + 1) % BUILDINGS_NUM;
 		toolX = -(DOUBLE)tool_gap_min - 3;
 	}
+	//如果到达了边界——最后的建筑物
 	if(abs(g_buildings[building_now].pos.y - preBuilding.y) < 0.00001 && abs(g_buildings[building_now].pos.x + g_buildings[building_now].size.cx - preBuilding.x) < 0.00001) return;
 	if(tool.m_type == 1 || tool.m_type == 3)
 	{
@@ -521,6 +536,7 @@ VOID ToolInit(Tool& tool)
 		tool.size.cy = 1;
 	}
 	DOUBLE max = (DOUBLE)tool_gap_max;	//两个道具的最大间隔
+	//如果是一片新的草地
 	if(abs(toolX+tool_gap_min+3) < 0.00001)
 	{
 		toolX = g_buildings[building_now].pos.x - tool.size.cx;
@@ -528,9 +544,10 @@ VOID ToolInit(Tool& tool)
 			max = g_buildings[building_now].size.cx - tool.size.cx + g_buildings[building_now].pos.x - toolX - tool.size.cx;
 		tool.pos.x = random(max) + toolX + tool.size.cx;
 	}
+	//如果草地上已经有草地
 	else
 	{
-		if(g_buildings[building_now].size.cx - tool.size.cx + g_buildings[building_now].pos.x - toolX - tool.size.cx - tool_gap_min < max)	// 3为两个道具的最小间隔
+		if(g_buildings[building_now].size.cx - tool.size.cx + g_buildings[building_now].pos.x - toolX - tool.size.cx - tool_gap_min < max)
 			max = g_buildings[building_now].size.cx - tool.size.cx + g_buildings[building_now].pos.x - toolX - tool.size.cx - tool_gap_min;
 		tool.pos.x = random(max) + toolX + tool.size.cx + tool_gap_min;
 	}
@@ -572,20 +589,30 @@ VOID HeroUpdate(Hero& hero)
 		HeroJump(hero);
 	//Touch
 	HeroTouch(hero);
+	//如果掉下去了
 	if(hero.pos.y > HEIGHT - 0.00001)
 	{
-		g_gameStatus.m_state = 12;
-		if(g_gameStatus.hero_type == 0)
-			PlaySound((LPCWSTR)IDR_DIE_0, NULL, SND_RESOURCE | SND_ASYNC);
+		hero.invincible_time = 100;
+		g_gameStatus.life--;
+		if(g_gameStatus.life == 0)
+		{
+			g_gameStatus.m_state = 12;
+			if(g_gameStatus.hero_type == 0)
+				PlaySound((LPCWSTR)IDR_DIE_0, NULL, SND_RESOURCE | SND_ASYNC);
+			else
+				PlaySound((LPCWSTR)IDR_DIE_1, NULL, SND_RESOURCE | SND_ASYNC);
+		}
 		else
-			PlaySound((LPCWSTR)IDR_DIE_1, NULL, SND_RESOURCE | SND_ASYNC);
+		{
+			hero.m_speed = 0;
+			hero.pos.y = -hero.size.cy - 1;
+		}
 	}
 }
 
 //GameStatus更新
 VOID GameStatusUpdate(GameStatus& gameStatus)
 {
-	//TODO
 	//游戏重新开始
 	if(g_gameStatus.m_state / 4 == 3 && g_keyState[VK_RETURN])
 	{
@@ -593,17 +620,17 @@ VOID GameStatusUpdate(GameStatus& gameStatus)
 		InitGame();
 	}
 	//游戏进行中
-	if(g_gameStatus.m_state / 4 == 2)
+	if(g_gameStatus.m_state == 8)
 		g_gameStatus.m_score += g_gameStatus.m_frequency * 50 / 1000;
 }
 
 //Background更新
 VOID BackgroundUpdate(Background& background)
 {
-	//TODO
 	if(background.size.cx == -1) return;
 	if(!background.visible) return;
 	background.pos.x -= g_gameStatus.backgroundMove;
+	//背景交接
 	if(background.pos.x + background.size.cx < WIDTH + 0.00001 && background.pos.x + background.size.cx + g_gameStatus.backgroundMove > WIDTH)
 	{
 		int id = 0;
@@ -622,6 +649,7 @@ VOID BackgroundUpdate(Background& background)
 		}
 		g_backgrounds[i].pos.x = background.pos.x + background.size.cx + 1;
 	}
+	//移出左边界
 	if(background.pos.x + background.size.cx < 0)
 	{
 		background.pos.x = 0;
@@ -632,10 +660,10 @@ VOID BackgroundUpdate(Background& background)
 //Building更新
 VOID BuildingUpdate(Building& building)
 {
-	//TODO
 	if(building.size.cx == -1) return;
 	if(g_gameStatus.m_state <= 0) return;
 	building.pos.x -= g_gameStatus.moveX;
+	//移出左边界，重新生成
 	if(building.pos.x + building.size.cx < 0)
 		BuildingInit(building);
 }
@@ -645,24 +673,40 @@ VOID ToolUpdate(Tool& tool)
 {
 	//TODO
 	if(tool.size.cx == -1) return;
+	//如果是金币，旋转
 	if(tool.m_type == 7)
 	{
 		tool.img_state += 0.5;
 		if(tool.img_state >= 8)
 			tool.img_state -= 8;
 	}
+	//如果是标志旗，随背景一起移动
 	if(tool.m_type == 2)
 		tool.pos.x -= g_gameStatus.backgroundMove;
 	else
 		tool.pos.x -= g_gameStatus.moveX;
+	//如果是飞镖，随机移动
 	if(tool.m_type == 0)
 	{
-		double tmp = random(1);
-		if(tmp < 0.3)
-			tool.pos.x -= g_gameStatus.moveX * 0.2;
-		else if(tmp < 0.6)
-			tool.pos.x += g_gameStatus.moveX * 0.2;
+		if(tool.left_time < 0)
+		{
+			tool.left_time++;
+			tool.pos.x -= g_gameStatus.moveX * 0.8;
+		}
+		else if(tool.left_time > 0)
+		{
+			tool.left_time--;
+			tool.pos.x += g_gameStatus.moveX * 0.8;
+		}
+		else
+		{
+			if(random(0,100) < 50)
+				tool.left_time = -(LONG)random(5,10);
+			else
+				tool.left_time = random(5,10);
+		}
 	}
+	//移出左边界，放入可用数组
 	if(tool.pos.x + tool.size.cx < 0)
 	{
  		tool.size.cx = -1;
@@ -677,10 +721,15 @@ VOID KeyUpdate()
 	//TODO
 	int k;
 	for(k = 1;k < 255;k++)
+		//按下按键
 		if(GetKeyState(k) < 0)
 			g_keyState[k] = TRUE;
 		else
 			g_keyState[k] = FALSE;
+	if(g_keyState[VK_RETURN])
+		g_times++;
+	if(g_keyState[VK_SPACE])
+		g_times++;
 }
 
 //Hero绘制
@@ -688,6 +737,10 @@ VOID HeroPaint(HDC hdcBuffer, HDC hdcBmp, Hero& hero)
 {
 	if(hero.size.cx == -1) return;
 	if(g_gameStatus.m_state / 4 == 0) return;
+	if(g_gameStatus.m_state == 8 && hero.invincible_time > 0)
+		hero.invincible_time--;
+	//无敌状态_闪烁
+	if(!(g_gameStatus.m_state == 8 && hero.invincible_time > 0 && hero.invincible_time % 10 < 5))
 	PicturePaint(hdcBuffer, hdcBmp, hero.img, hero.pos.x * GRID, hero.pos.y * GRID, hero.size.cx * GRID, hero.size.cy * GRID, hero.img_point.x, int(hero.img_state) * hero.img_size.cy, hero.img_size.cx, hero.img_size.cy - 20);
 }
 
