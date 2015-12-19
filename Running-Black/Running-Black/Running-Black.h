@@ -5,13 +5,13 @@
 * 文件名称：Running-Black.h
 * 摘	要：跑酷游戏工程声明文件
 *
-* 当前版本：1.5
+* 当前版本：2.1
 * 作	者: Krystal/甘茂霖
-* 完成日期：2015年12月6日
+* 完成日期：2015年12月18日
 *
-* 取代版本：1.4
+* 取代版本：1.6
 * 原作者  ：Krystal/甘茂霖
-* 完成日期：2015年12月5日
+* 完成日期：2015年12月16日
 */
 
 #pragma once
@@ -25,14 +25,15 @@
 
 typedef double DOUBLE;
 
+/* 结构体定义 */
+//实数点结构体
 typedef struct
 {
 	DOUBLE x;
 	DOUBLE y;
 }POINTF;
 
-/* 结构体定义 */
-//英雄结构体，英雄位图、位图状态、位置、大小、类型、速度、加速度、生命、状态
+//英雄结构体，英雄位图、位图状态、位置、大小、类型、速度、加速度、生命、状态、n段跳次数、无敌时间
 typedef struct
 {
 	HBITMAP		img;
@@ -43,8 +44,9 @@ typedef struct
 	SIZE		size;
 	DOUBLE		m_speed;
 	DOUBLE		m_a;
-	UINT		m_state;
-	UINT		times;
+	UINT		m_state; //0:正常，1:加速，2:飞起,3:减速
+	UINT		times; //剩余可以跳跃的次数
+	UINT		invincible_time; //剩余无敌时间
 }Hero;
 
 //建筑物结构体，建筑位图、位置、大小
@@ -60,7 +62,7 @@ typedef struct
 }Building;
 
 
-//道具结构体，道具位图、位置、大小、类别、是否为实心、是否落地
+//道具结构体，道具位图、位置、大小、类别、是否为实心、是否会消失、是否落地、向左运动时间
 typedef struct
 {
 	HBITMAP		img;
@@ -74,9 +76,10 @@ typedef struct
 	BOOL		solid;
 	BOOL		disappear;
 	BOOL		down;
+	LONG		left_time;
 }Tool;
 
-//背景结构体，背景位图、位置、大小
+//背景结构体，背景位图、位置、大小、是否可见
 typedef struct
 {
 	HBITMAP		img;
@@ -87,13 +90,13 @@ typedef struct
 	BOOL		visible;
 }Background;
 
-//游戏状态结构体，得分、暂停、频率、状态、基础高度、生命
+//游戏状态结构体，得分、暂停、频率、状态、基础高度、生命、金币数、物体移动速度、背景移动速度
 typedef struct
 {
 	DOUBLE		m_score;
 	BOOL		isPaused;
 	UINT		m_frequency;
-	UINT		m_state;
+	UINT		m_state; //m_state / 4表示4个状态:开始的动画、开始界面、游戏状态、死亡之塔，m_state % 4表示里面的具体状态，8表示runing,9表示paused
 	UINT		hero_type;
 	UINT		basic_high;
 	UINT		basic_x;
@@ -103,7 +106,7 @@ typedef struct
     DOUBLE      backgroundMove;
 }GameStatus;
 
-//位图加载结构体
+//位图加载结构体、绘制位置
 typedef struct
 {
 	HBITMAP img;
@@ -142,51 +145,51 @@ extern UINT background_img[];
 extern UINT building_img[];
 extern UINT tool_img[];
 
-extern BOOL g_keyState[256];
-extern UINT g_times;
-extern DOUBLE headX;
-extern POINTF preBuilding;
-extern DOUBLE toolX;
-extern UINT building_now;
-extern UINT tool_gap_min;
-extern UINT tool_gap_max;
-extern BOOL toolCreate;
-extern UINT tool_id[TOOLS_TYPE][TOOLS_NUM / TOOLS_TYPE + 1];
-extern BOOL g_flag;
-extern UINT tool_start;
-extern Bmp hero_bmps[3 * HEROS_NUM];
-extern DOUBLE moveX;
-extern DOUBLE backgroundMove;
+extern BOOL g_keyState[256];	//按键状态，TRUE表示被按下
+extern UINT g_times;	//计数器次数，用于实现帧动画
+extern DOUBLE headX;	//用于生成建筑物(草地)
+extern POINTF preBuilding;	//用于生成建筑物(草地)
+extern DOUBLE toolX;	//用于生成道具
+extern UINT building_now;	//用于生成道具
+extern UINT tool_gap_min;	//道具间隔_最小值
+extern UINT tool_gap_max;	//道具间隔_最大值
+extern BOOL toolCreate;	//是否进入更新道具生成状态
+extern UINT tool_id[TOOLS_TYPE][TOOLS_NUM / TOOLS_TYPE + 1];	//可用道具的下标数组
+extern BOOL g_flag;	//上一个计时事件是否完成，用于防止单次事件运行时间过长，两次事件撞到
+extern UINT tool_start; //道具生效时间
+extern Bmp hero_bmps[3 * HEROS_NUM]; //英雄位图
+extern DOUBLE moveX; //基础物体移动速度
+extern DOUBLE backgroundMove; //基础建筑移动速度
 
-extern Bmp hero_select_0;
-extern Bmp hero_select_1;
-extern Bmp button_start_0;
-extern Bmp button_start_1;
-extern Bmp button_start_2;
-extern Bmp button_return;
-extern Bmp button_pause_0;
-extern Bmp button_pause_1;
-extern Bmp author;
+extern Bmp hero_select_0; //英雄选择_0_罗小黑
+extern Bmp hero_select_1; //英雄选择_1_神烦狗
+extern Bmp button_start_0; //开始页面_0_start
+extern Bmp button_start_1; //开始页面_1_about game
+extern Bmp button_start_2; //开始页面_2_about writer
+extern Bmp button_return; //返回按钮
+extern Bmp button_pause_0; //暂停按钮_暂停状态
+extern Bmp button_pause_1; //暂停按钮_进行状态
+extern Bmp author; //作者图片
 
-extern POINTF info_0_pos;
-extern POINTF info_1_pos;
-extern POINTF title_pos;
-extern POINTF hint_pos;
-extern POINTF score_pos;
-extern POINTF coin_pos;
-extern POINTF life_pos;
-extern POINTF help_pos;
+extern POINTF info_0_pos; //pos_介绍信息_0_author
+extern POINTF info_1_pos; //pos_介绍信息_1_Krystal
+extern POINTF title_pos; //pos_title_罗小黑历险记
+extern POINTF hint_pos; //pos_hint_开始游戏/选择人物/关于游戏/关于作者
+extern POINTF score_pos; 
+extern POINTF coin_pos; 
+extern POINTF life_pos; 
+extern POINTF help_pos; 
 extern POINTF death_pos;
-extern POINTF restart_pos;
+extern POINTF restart_pos; //pos_restart_"press enter to start"
 
-extern SIZE help_size;
-extern SIZE death_size;
+extern SIZE help_size; //帮助框大小
+extern SIZE death_size; //结束界面框大小
 
 //窗口初始化
 VOID Init(HWND hWnd, WPARAM wParam, LPARAM lParam);
 //定时器事件
 VOID TimerUpdate(HWND hWnd, WPARAM wParam, LPARAM lParam);
-//鼠标事件
+//鼠标单机事件
 VOID MouseClickEvent(HWND hWnd, WPARAM wParam, LPARAM lParam);
 //绘制事件
 VOID Render(HWND hWnd, WPARAM wParam, LPARAM lParam);
@@ -194,7 +197,7 @@ VOID Render(HWND hWnd, WPARAM wParam, LPARAM lParam);
 VOID Destroy(HWND hWnd, WPARAM wParam, LPARAM lParam);
 //Static元素位置初始化
 VOID InitPos();
-//游戏初始化
+//游戏数据初始化
 VOID InitGame();
 //Hero初始化
 VOID HeroInit(Hero& hero);
@@ -202,9 +205,9 @@ VOID HeroInit(Hero& hero);
 VOID GameStatusInit(GameStatus& gameStatus);
 //Background初始化
 VOID BackgroundInit(Background& background);
-//Building初始化
+//Building初始化，用于随机生成建筑物(草地)
 VOID BuildingInit(Building& building);
-//Tool初始化
+//Tool初始化，用于随机生成道具
 VOID ToolInit(Tool& tool);
 //Tool带参数初始化
 VOID ToolInit(Tool& tool, DOUBLE x, DOUBLE y, UINT cx, UINT cy);
@@ -236,10 +239,14 @@ VOID BeginStatePaint(HDC hdcBuffer, HDC hdcBmp);
 VOID RunStatePaint(HDC hdcBuffer, HDC hdcBmp);
 //死亡界面
 VOID DeathStatePaint(HDC hdcBuffer, HDC hdcBmp);
-//绘制纯色背景
+//绘制纯色背景,不带边框
 VOID SolidBackgroundPaint(HDC hdcBuffer, COLORREF color, DOUBLE x, DOUBLE y, DOUBLE width, DOUBLE height);
+//绘制纯色背景，带边框
+VOID NullBackgroundPaint(HDC hdcBuffer, COLORREF color, DOUBLE x, DOUBLE y, DOUBLE width, DOUBLE height, COLORREF penColor);
+//绘制边框
+VOID NullBackgroundPaint(HDC hdcBuffer, DOUBLE x, DOUBLE y, DOUBLE width, DOUBLE height, COLORREF penColor);
 //设置文字大小，颜色，字体
-VOID SetFont(HDC hdcBuffer, LONG size, COLORREF color, BYTE family);
+HFONT SetFont(HDC hdcBuffer, LONG size, COLORREF color, BYTE family);
 //绘制图片
 VOID PicturePaint(HDC hdcBuffer, HDC hdcBmp, HBITMAP bmp, DOUBLE x, DOUBLE y, UINT width, UINT height, UINT sx, UINT sy, UINT sw, UINT sh);
 //Hero移动处理
